@@ -36,6 +36,7 @@ public class KafkaConsumerConfiguration {
 					environment.getProperty("spring.kafka.consumer.properties.spring.json.trusted.packages"));
 		config.put(ConsumerConfig.GROUP_ID_CONFIG,
 				environment.getProperty("spring.kafka.consumer.group-id"));
+		
 
 		return new DefaultKafkaConsumerFactory<>(config);
 	}
