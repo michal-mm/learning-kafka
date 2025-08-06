@@ -28,3 +28,8 @@ products-microservice/.classpath
 products-microservice/.gitignore
 products-microservice/.project
 products-microservice/.settings/
+
+email-notification-service/.classpath
+email-notification-service/.gitignore
+email-notification-service/.project
+email-notification-service/.settings/
