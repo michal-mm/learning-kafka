@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.michalmm.kafka.ws.products.rest.CreateProductRestModel;
 @Service
 public class ProductServiceImpl implements ProductService{
 
+	@Autowired
 	private KafkaTemplate<String, ProductCreatedEvent> kafkaTemplate;
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass()); 
@@ -44,14 +46,16 @@ public class ProductServiceImpl implements ProductService{
 		
 		future.whenComplete((result, exception) -> {
 			if(exception != null) {
-				LOGGER.error("Failed to send message: " + exception.getMessage());
+				LOGGER.error("******* Failed to send message: " + exception.getMessage());
 			} else {
-				LOGGER.info("Message sent succesfully: " + result.getRecordMetadata());
+				LOGGER.info("******* Message sent succesfully: " + result.getRecordMetadata());
 			}
 		});
 		
 		// this makes it synchronous call
-		future.join();
+//		future.join();
+		
+		LOGGER.info("***** Returning product id");
 		
 		return productId;
 	}
