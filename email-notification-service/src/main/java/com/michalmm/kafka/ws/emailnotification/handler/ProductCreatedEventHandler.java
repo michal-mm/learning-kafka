@@ -48,6 +48,13 @@ public class ProductCreatedEventHandler {
 						@Header(KafkaHeaders.RECEIVED_KEY) String messageKey) {
 		LOGGER.info("Received a new event: " + productCreatedEvent.getTitle() 
 		+ " with productId: " + productCreatedEvent.getProductId());
+		
+		
+		// check if this message was already processed before
+		ProcessedEventEntity existingRecord = processedEventRepository.findByMessageId(messageId);
+		if(existingRecord != null) {
+			LOGGER.info("MessageId: " + messageId + " already exists int he DB");
+		}
 //		way to see if messages that cause non retryable exception end up going to DLT -> yes, they do!
 //		if(true) throw new NotRetryableException("An error took place. Skipping this message");
 		
