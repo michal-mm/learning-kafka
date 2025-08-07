@@ -32,12 +32,13 @@ public class ProductCreatedEventHandler {
 
 	@KafkaHandler
 	public void handle(ProductCreatedEvent productCreatedEvent) {
-		LOGGER.info("Received a new event: " + productCreatedEvent.getTitle());
+		LOGGER.info("Received a new event: " + productCreatedEvent.getTitle() 
+		+ " with productId: " + productCreatedEvent.getProductId());
 //		way to see if messages that cause non retryable exception end up going to DLT -> yes, they do!
 //		if(true) throw new NotRetryableException("An error took place. Skipping this message");
 		
 		// handle retryable exception
-		String requestUrl = "http://localhost:8082";
+		String requestUrl = "http://localhost:8082/response/200";
 		try {
 			ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
 			if (response.getStatusCode().value() == HttpStatus.OK.value()) {

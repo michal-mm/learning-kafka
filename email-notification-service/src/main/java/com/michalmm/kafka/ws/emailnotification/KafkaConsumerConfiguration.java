@@ -37,7 +37,7 @@ public class KafkaConsumerConfiguration {
 	Environment environment;
 	
 	@Bean
-	public ConsumerFactory<String, Object> consumerFactory() {
+	ConsumerFactory<String, Object> consumerFactory() {
 		Map<String, Object> config = new HashMap<>();
 		
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, 
