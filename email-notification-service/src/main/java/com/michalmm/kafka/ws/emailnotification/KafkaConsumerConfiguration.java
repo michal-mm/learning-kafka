@@ -22,9 +22,11 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.util.backoff.FixedBackOff;
 import org.springframework.web.client.HttpServerErrorException;
 
 import com.michalmm.kafka.ws.emailnotification.error.NotRetryableException;
+import com.michalmm.kafka.ws.emailnotification.error.RetryableException;
 
 
 
@@ -60,8 +62,10 @@ public class KafkaConsumerConfiguration {
 			ConsumerFactory<String, Object> consumerFactory,
 			KafkaTemplate<String, Object> kafkaTemplate) {
 		
-		DefaultErrorHandler errorHandler = new DefaultErrorHandler(new DeadLetterPublishingRecoverer(kafkaTemplate));
+		DefaultErrorHandler errorHandler = new DefaultErrorHandler(new DeadLetterPublishingRecoverer(kafkaTemplate),
+				new FixedBackOff(5000,3)); // wait for 5sec, have 3 attempts, before sending to DLT
 		errorHandler.addNotRetryableExceptions(NotRetryableException.class, HttpServerErrorException.class);
+		errorHandler.addRetryableExceptions(RetryableException.class);
 		
 		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory);
