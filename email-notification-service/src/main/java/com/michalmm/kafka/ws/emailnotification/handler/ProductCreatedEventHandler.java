@@ -60,6 +60,7 @@ public class ProductCreatedEventHandler {
 		
 		// handle retryable exception
 		String requestUrl = "http://localhost:8082/response/200";
+		/*
 		try {
 			ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
 			if (response.getStatusCode().value() == HttpStatus.OK.value()) {
@@ -77,7 +78,7 @@ public class ProductCreatedEventHandler {
 			LOGGER.error("General exception --> " + ex.getMessage());
 			throw new NotRetryableException(ex);
 		}
-		
+		*/
 		// save unique message id in the DB
 		try {
 			processedEventRepository.save(new ProcessedEventEntity(messageId, productCreatedEvent.getProductId()));
