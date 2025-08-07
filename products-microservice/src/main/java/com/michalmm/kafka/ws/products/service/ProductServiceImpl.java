@@ -3,6 +3,7 @@ package com.michalmm.kafka.ws.products.service;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,16 @@ public class ProductServiceImpl implements ProductService{
 		// sends asynchronously 
 //		/*CompletableFuture<SendResult<String, ProductCreatedEvent>> future = kafkaTemplate*/
 		
+		ProducerRecord<String, ProductCreatedEvent> record = new ProducerRecord<>(
+				"product-created-events-topic",
+				productId,
+				productCreatedEvent);
+		record.headers().add("messageId", UUID.randomUUID().toString().getBytes());
+		
+		
 		SendResult<String, ProductCreatedEvent> result = kafkaTemplate 
-				.send("product-created-events-topic", productId, productCreatedEvent)
+				//.send("product-created-events-topic", productId, productCreatedEvent)
+				.send(record)
 				.get();
 		
 		LOGGER.info("### Partition: " + result.getRecordMetadata().partition());
