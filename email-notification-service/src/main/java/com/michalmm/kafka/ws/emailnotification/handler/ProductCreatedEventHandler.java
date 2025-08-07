@@ -7,6 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.michalmm.kafka.ws.core.ProductCreatedEvent;
+import com.michalmm.kafka.ws.emailnotification.error.NotRetryableException;
 
 @Component
 @KafkaListener(topics="product-created-events-topic")
@@ -17,5 +18,7 @@ public class ProductCreatedEventHandler {
 	@KafkaHandler
 	public void handle(ProductCreatedEvent productCreatedEvent) {
 		LOGGER.info("Received a new event: " + productCreatedEvent.getTitle());
+//		way to see if messages that cause non retryable exception end up going to DLT -> yes, they do!
+//		if(true) throw new NotRetryableException("An error took place. Skipping this message");
 	}
 }
